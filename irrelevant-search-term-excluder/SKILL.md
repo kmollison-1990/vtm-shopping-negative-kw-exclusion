@@ -1,7 +1,7 @@
 # Skill: VTM Vending — Shopping Campaign Negative Keyword Cleanup
 
 ## Purpose
-Weekly (or on-demand) cleanup of irrelevant search terms triggering VTM Vending's Google Ads
+Cleanup of irrelevant search terms triggering VTM Vending's Google Ads
 Shopping campaigns. Identifies low-intent search terms based on a semantic match against VTM's
 business (vending machines that dispense Pokemon / trading cards), adds them as negative
 keywords automatically, and reports the outcome to the team in Slack.
@@ -11,15 +11,15 @@ keywords automatically, and reports the outcome to the team in Slack.
 dispense Pokemon cards and other trading cards.
 
 ## Required Tools
-- **Google Ads Agent** — pull campaigns, search terms report, existing negative keywords, and
-  add new negative keywords.
+- **Google Ads Agent** — pull campaigns, search terms report, existing negative keywords.
 - **Slack Agent** — post the summary notification to `#VTM`.
+- **Add Negative Keywords** - Google Ads tool to add negative keywords
 
-No personal Google Ads or Slack connection is assumed; delegate to the agents above. Each
+No personal Google Ads or Slack connection is assumed; delegate to the agents or tools above. Each
 agent call is one-shot (no memory) — batch all needed data into a single, complete instruction.
 
 ## Config / Constants
-- **Lookback window:** trailing 7 days (rolling, relative to run date).
+- **Lookback window:** trailing 14 days (rolling, relative to run date).
 - **Campaign scope:** ALL Shopping campaigns in the VTM Vending Google Ads account (not a
   fixed list — re-discover active Shopping campaigns each run).
 - **Click filter:** only search terms with clicks ≥ 1 in the window.
@@ -36,7 +36,7 @@ agent call is one-shot (no memory) — batch all needed data into a single, comp
 Query the Google Ads Agent for every negative keyword currently applied to VTM Vending's
 Shopping campaigns — campaign-level negatives AND any shared negative keyword lists applied to
 those campaigns. Capture keyword text and match type for each. This is the exclusion baseline
-used in Step 3.
+used in Step 3. If the Google Ads Agent does not have the ability to pull negative keywords directly, it should use the get change history tool to pull any change history events with details including "negative keyword added" in the last 29 days to identify which negative keywords were recently added.
 
 ### Step 2 — Pull search terms report
 Query the Google Ads Agent for the search terms report across **all Shopping campaigns** in

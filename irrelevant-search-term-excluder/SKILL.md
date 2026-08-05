@@ -36,7 +36,7 @@ agent call is one-shot (no memory) — batch all needed data into a single, comp
 Query the Google Ads Agent for every negative keyword currently applied to VTM Vending's
 Shopping campaigns — campaign-level negatives AND any shared negative keyword lists applied to
 those campaigns. Capture keyword text and match type for each. This is the exclusion baseline
-used in Step 3. If the Google Ads Agent does not have the ability to pull negative keywords directly, it should use the get change history tool to pull any change history events with details including "negative keyword added" in the last 29 days to identify which negative keywords were recently added.
+used in Step 3.
 
 ### Step 2 — Pull search terms report
 Query the Google Ads Agent for the search terms report across **all Shopping campaigns** in

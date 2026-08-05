@@ -14,6 +14,7 @@ dispense Pokemon cards and other trading cards.
 - **Google Ads Agent** — pull campaigns, search terms report, existing negative keywords.
 - **Slack Agent** — post the summary notification to `#VTM`.
 - **Add Negative Keywords** - Google Ads tool to add negative keywords
+- **score_terms.py** — a deterministic scoring script checked into this repo at `scripts/score_terms.py`. Download it and run it in the sandbox against the Step 3/4 working list rather than scoring terms via fresh LLM judgment each run. This guarantees the same search term gets the same intent score on every run. Do not hand-edit its scoring rules mid-run — if a term's score looks wrong, fix the rule in the script and open a PR; do not override a single term's score inline.
 
 No personal Google Ads or Slack connection is assumed; delegate to the agents or tools above. Each
 agent call is one-shot (no memory) — batch all needed data into a single, complete instruction.
@@ -100,21 +101,24 @@ query containing all the negative's terms). **Remove any search term already cov
 existing negative** from the working list — it should not be scored or re-added. Note the
 removed count for context but do not include these terms in later steps.
 
-### Step 4 — Score intent similarity (1–10)
-For every remaining search term, assign an **intent similarity score from 1 (no match) to 10
-(near-perfect match)** against VTM's business (vending machines dispensing Pokemon / trading
-cards). Score based on purchase/commercial intent alignment with VTM's actual product, not
-just keyword overlap with "Pokemon."
-
-Calibration examples (apply this same bar consistently every run):
-- **10** — `pokemon vending machine for sale` (near-perfect match: explicit product + purchase intent)
-- **1** — `gengar gifts for men`, `mega chandelure` (Pokemon-adjacent fandom/character interest,
-  no vending-machine or purchasing intent)
-
-Score every term individually; do not batch-approximate. Output the full scored table.
-
-*(Note: these calibration examples are for the scoring agent's own internal reasoning only —
-do not paste them into any Google Ads Agent or Slack Agent delegation message.)*
+> ### Step 4 — Score intent similarity (1–10)
+> Download `scripts/score_terms.py` and `tests/test_score_terms.py`
+> from this repo (same pattern as downloading SKILL.md itself — do not
+> load them into working context, run them from disk in the sandbox).
+> Run the test suite first (`python3 tests/test_score_terms.py`) — it
+> must pass before scoring live data. If it fails, stop and report the
+> failure; do not proceed with a broken scorer.
+>
+> Feed the Step 3 working list (as JSON: `searchTerm`, `clicks`,
+> `cost`, `conversions`, plus campaign fields) into
+> `score_terms.py input.json output.json`. The output adds `score`
+> (1-10) and `reason` to every row.
+>
+> There is no manual override step. If a specific term's score looks
+> wrong for a reason not covered by the existing tier logic, do not
+> hand-adjust that term's score — flag it to the user and treat it as
+> a scoring-rule bug to fix in the script (with an accompanying test
+> case), not a one-off exception.
 
 ### Step 5 — Split into two buckets by conversion status
 From the scored table:

@@ -58,7 +58,7 @@ Correct pattern:
    action.
 
 ## Config / Constants
-- **Lookback window:** trailing 7 days (rolling, relative to run date).
+- **Lookback window:** trailing 14 days (rolling, relative to run date).
 - **Campaign scope:** ALL Shopping campaigns in the VTM Vending Google Ads account (not a
   fixed list — re-discover active Shopping campaigns each run).
 - **Click filter:** only search terms with clicks >= 1 in the window.
@@ -89,7 +89,7 @@ Send this exact instruction to the Google Ads Agent:
 
 > Google Ads account: VTM Vending. Pull the search terms report for all active Shopping
 > campaigns (re-discover the list; exclude Search and Performance Max campaigns), trailing
-> 7 days, filtered to clicks >= 1. Return search term, campaign, ad group, clicks, cost,
+> 14 days, filtered to clicks >= 1. Return search term, campaign, ad group, clicks, cost,
 > avg CPC, and conversions for every row (no truncation). Output as a markdown table
 > titled "Search Terms Report (Trailing 7 Days, Clicks >= 1)".
 
